@@ -1,5 +1,6 @@
 package com.example.unscramble.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.unscramble.data.allWords
 import com.example.unscramble.ui.uistatemodels.GameUiState
@@ -27,7 +28,8 @@ class GameViewModel : ViewModel() {
             usedWords.add(currentWord)
 
             val tempWord = currentWord.toCharArray()
-            return tempWord.shuffle().toString()
+            tempWord.shuffle()
+            return tempWord.joinToString("")
         }
     }
 
