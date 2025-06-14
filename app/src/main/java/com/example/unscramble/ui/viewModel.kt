@@ -48,13 +48,20 @@ class GameViewModel : ViewModel() {
 
     fun checkUserGuess() {
         if (_userGuess.value == currentWord) {
-            uiState.update { uiStateValue -> uiStateValue.copy(score = uiStateValue.score + 1) }
+            uiState.update { uiStateValue ->
+                uiStateValue.copy(
+                    currentScrambledWord = produceRandomWord(),
+                    score = uiStateValue.score + 1,
+                    count = uiStateValue.count + 1
+                )
+            }
 
         } else {
             uiState.update { uiStateValue ->
                 uiStateValue.copy(isGuessCorrect = false)
             }
         }
+        _userGuess.update { " " }
     }
 
     fun updateUserGuess(guess: String) {
