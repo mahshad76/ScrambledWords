@@ -52,7 +52,8 @@ class GameViewModel : ViewModel() {
                 uiStateValue.copy(
                     currentScrambledWord = produceRandomWord(),
                     score = uiStateValue.score + 1,
-                    count = uiStateValue.count + 1
+                    count = uiStateValue.count + 1,
+                    isGuessCorrect = true
                 )
             }
 
@@ -61,11 +62,16 @@ class GameViewModel : ViewModel() {
                 uiStateValue.copy(isGuessCorrect = false)
             }
         }
-        _userGuess.update { " " }
+        _userGuess.update { "" }
     }
 
     fun updateUserGuess(guess: String) {
         _userGuess.update { guess }
+    }
+
+    fun skipWord() {
+        uiState.update { uiStateValue -> uiStateValue.copy(currentScrambledWord = produceRandomWord()) }
+        _userGuess.update { " " }
     }
 
 }
