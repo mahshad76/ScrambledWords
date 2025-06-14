@@ -84,6 +84,8 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
             currentScrambledWord = gameUiState.currentScrambledWord,
             guessOfUser = userGuess,
             update = { new: String -> gameViewModel.updateUserGuess(new) },
+            check = { gameViewModel.checkUserGuess() },
+            flag = gameUiState.isGuessCorrect,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
@@ -99,7 +101,7 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { }
+                onClick = { gameViewModel.checkUserGuess() }
             ) {
                 Text(
                     text = stringResource(R.string.submit),
@@ -118,7 +120,7 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
             }
         }
 
-        GameStatus(score = 0, modifier = Modifier.padding(20.dp))
+        GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
     }
 }
 
@@ -140,6 +142,8 @@ fun GameLayout(
     currentScrambledWord: String,
     guessOfUser: String,
     update: (String) -> Unit,
+    check: () -> Unit,
+    flag: Boolean,
     modifier: Modifier = Modifier
 ) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -183,13 +187,19 @@ fun GameLayout(
                     disabledContainerColor = colorScheme.surface,
                 ),
                 onValueChange = update,
-                label = { Text(stringResource(R.string.enter_your_word)) },
+                label = {
+                    if (flag) {
+                        Text(stringResource(R.string.enter_your_word))
+                    } else {
+                        Text(stringResource(R.string.wrong_guess))
+                    }
+                },
                 isError = false,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { }
+                    onDone = { check() }
                 )
             )
         }
