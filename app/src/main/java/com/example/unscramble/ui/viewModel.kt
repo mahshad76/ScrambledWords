@@ -20,9 +20,9 @@ class GameViewModel : ViewModel() {
     private var uiState = MutableStateFlow(GameUiState())
     val uiStateFlow: StateFlow<GameUiState>
         get() = uiState.asStateFlow()
-
-    ///why cant i use remember
-    var guessState = mutableStateOf("")
+    private var _userGuess = MutableStateFlow("")
+    val userGuess: StateFlow<String>
+        get() = _userGuess.asStateFlow()
 
     init {
         resetGame()
@@ -47,7 +47,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun checkUserGuess() {
-        if (guessState.value == currentWord) {
+        if (_userGuess.value == currentWord) {
             uiState.update { uiStateValue -> uiStateValue.copy(score = uiStateValue.score + 1) }
 
         } else {
@@ -56,4 +56,10 @@ class GameViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateUserGuess(guess: String) {
+        _userGuess.update { guess }
+    }
+
 }
+
